@@ -65,6 +65,7 @@ public class TrafficFinesController : Controller
         var fine = await _db.TrafficFines
             .AsNoTracking()
             .Include(f => f.Vehicle)
+            .Include(f => f.History)
             .FirstOrDefaultAsync(f => f.Id == id);
         if (fine is null)
         {
