@@ -1,0 +1,115 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="page-header mb-4">
+    <h1 class="h3 mb-1">Kontrol paneli</h1>
+    <p class="text-muted mb-0">Hoş geldiniz, @Model.CurrentUser.DisplayName. Bekleyen işleriniz ve özet sayılar aşağıdadır.</p>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-label">Toplam araç</div>
+            <div class="stat-value">@Model.VehicleCount</div>
+            <a asp-controller="Vehicles" asp-action="Index">Araç listesi</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-label">Toplam ceza</div>
+            <div class="stat-value">@Model.FineCount</div>
+            <a asp-controller="TrafficFines" asp-action="Index">Ceza listesi</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-label">Sizin kuyruğunuz</div>
+            <div class="stat-value">@Model.Pending.Count</div>
+            <span class="text-muted small">@Model.CurrentUser.Role.GetDisplayName() aşaması</span>
+        </div>
+    </div>
+</div>
+
+<h2 class="h5 mb-3">Durum özeti</h2>
+<div class="row g-3 mb-4">
+    @foreach (var status in Enum.GetValues<FineStatus>())
+    {
+        var count = Model.StatusCounts.TryGetValue(status, out var value) ? value : 0;
+        <div class="col-6 col-md">
+            <a class="status-tile text-decoration-none" asp-controller="TrafficFines" asp-action="Index" asp-route-status="@status">
+                <partial name="_FineStatusBadge" model="status" />
+                <div class="stat-value mt-2">@count</div>
+            </a>
+        </div>
+    }
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white fw-semibold">Bekleyen onaylar</div>
+            <div class="card-body p-0">
+                @if (!Model.Pending.Any())
+                {
+                    <p class="text-muted p-3 mb-0">Bu rol için bekleyen kayıt yok.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Plaka</th>
+                                    <th>Tutar</th>
+                                    <th>Durum</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var fine in Model.Pending)
+                            {
+                                <tr>
+                                    <td>@fine.Vehicle.Plate</td>
+                                    <td>@fine.Amount.ToString("N2") ₺</td>
+                                    <td><partial name="_FineStatusBadge" model="fine.Status" /></td>
+                                    <td class="text-end">
+                                        <a class="btn btn-sm btn-outline-primary" asp-controller="TrafficFines" asp-action="Details" asp-route-id="@fine.Id">İncele</a>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white fw-semibold">Son cezalar</div>
+            <div class="card-body p-0">
+                @if (!Model.Recent.Any())
+                {
+                    <p class="text-muted p-3 mb-0">Henüz ceza kaydı yok.</p>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var fine in Model.Recent)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-semibold">@fine.Vehicle.Plate</div>
+                                    <div class="small text-muted">@fine.FineDate.ToString("dd.MM.yyyy") · @fine.Amount.ToString("N2") ₺</div>
+                                </div>
+                                <partial name="_FineStatusBadge" model="fine.Status" />
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
