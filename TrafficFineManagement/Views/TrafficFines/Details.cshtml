@@ -42,6 +42,8 @@
     </div>
 </div>
 
+<partial name="_ApprovalHistory" model="Model.History.OrderBy(h => h.PerformedAt).ThenBy(h => h.Id).ToList()" />
+
 @if (canAct)
 {
     <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
