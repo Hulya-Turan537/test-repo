@@ -1,0 +1,35 @@
+@model Vehicle
+@{
+    ViewData["Title"] = "Araç sil";
+}
+
+<h1 class="h3 mb-3">Araç sil</h1>
+<p class="text-muted">Bu kaydı silmek istediğinize emin misiniz?</p>
+
+@if (Model.Fines.Count > 0)
+{
+    <div class="alert alert-warning">Bu araca bağlı @Model.Fines.Count ceza kaydı var. Silme işlemi yapılamaz.</div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Plaka</dt>
+            <dd class="col-sm-9">@Model.Plate</dd>
+            <dt class="col-sm-3">Araç tipi</dt>
+            <dd class="col-sm-9">@Model.VehicleType.GetDisplayName()</dd>
+            <dt class="col-sm-3">Marka / Model</dt>
+            <dd class="col-sm-9">@Model.BrandModel</dd>
+        </dl>
+    </div>
+    <div class="card-footer bg-white">
+        <form asp-action="Delete" method="post" class="d-flex gap-2">
+            <input type="hidden" asp-for="Id" />
+            @if (Model.Fines.Count == 0)
+            {
+                <button type="submit" class="btn btn-danger">Sil</button>
+            }
+            <a class="btn btn-outline-secondary" asp-action="Index">İptal</a>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+@model Vehicle
+@{
+    ViewData["Title"] = "Araç detayı";
+}
+
+<h1 class="h3 mb-4">Araç detayı</h1>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Plaka</dt>
+            <dd class="col-sm-9">@Model.Plate</dd>
+            <dt class="col-sm-3">Araç tipi</dt>
+            <dd class="col-sm-9">@Model.VehicleType.GetDisplayName()</dd>
+            <dt class="col-sm-3">Marka / Model</dt>
+            <dd class="col-sm-9">@Model.BrandModel</dd>
+            <dt class="col-sm-3">Bağlı cezalar</dt>
+            <dd class="col-sm-9">@Model.Fines.Count</dd>
+        </dl>
+    </div>
+    <div class="card-footer bg-white d-flex gap-2">
+        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Düzenle</a>
+        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Sil</a>
+        <a class="btn btn-outline-secondary" asp-action="Index">Listeye dön</a>
+    </div>
+</div>
