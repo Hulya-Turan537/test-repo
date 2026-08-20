@@ -1,0 +1,13 @@
+@model FineStatus
+@{
+    var css = Model switch
+    {
+        FineStatus.Yeni => "text-bg-secondary",
+        FineStatus.YoneticiOnayi => "text-bg-primary",
+        FineStatus.FinansOnayi => "text-bg-warning text-dark",
+        FineStatus.Tamamlandi => "text-bg-success",
+        FineStatus.Reddedildi => "text-bg-danger",
+        _ => "text-bg-light text-dark"
+    };
+}
+<span class="badge rounded-pill @css">@Model.GetDisplayName()</span>
