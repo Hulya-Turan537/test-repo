@@ -32,7 +32,7 @@
             <form asp-action="Approve" asp-route-id="@Model.Id" method="post">
                 <button type="submit" class="btn btn-success">Onayla</button>
             </form>
-            <button type="button" class="btn btn-outline-danger" data-bs-toggle="collapse" data-bs-target="#rejectPanel">Reddet</button>
+            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">Reddet</button>
         }
         @if (!Model.IsClosed)
         {
@@ -44,16 +44,24 @@
 
 @if (canAct)
 {
-    <div class="collapse" id="rejectPanel">
-        <div class="card border-danger shadow-sm">
-            <div class="card-body">
-                <h2 class="h5">Ret nedeni</h2>
-                <form asp-action="Reject" asp-route-id="@Model.Id" method="post">
-                    <div class="mb-3">
-                        <label class="form-label" for="reason">Neden</label>
-                        <textarea id="reason" name="reason" class="form-control" rows="3" required maxlength="500"></textarea>
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="rejectFineForm" asp-action="Reject" asp-route-id="@Model.Id" method="post" novalidate>
+                    <div class="modal-header">
+                        <h2 class="modal-title h5" id="rejectModalLabel">Cezayı reddet</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
                     </div>
-                    <button type="submit" class="btn btn-danger">Reddi onayla</button>
+                    <div class="modal-body">
+                        <p class="text-muted">Ret nedeni zorunludur. Bu işlem geri alınamaz.</p>
+                        <label class="form-label" for="rejectReason">Ret nedeni</label>
+                        <textarea id="rejectReason" name="reason" class="form-control" rows="4" maxlength="500" required></textarea>
+                        <div id="rejectReasonError" class="invalid-feedback d-none">Ret nedeni en az 3 karakter olmalıdır.</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                        <button type="submit" class="btn btn-danger">Reddi onayla</button>
+                    </div>
                 </form>
             </div>
         </div>
