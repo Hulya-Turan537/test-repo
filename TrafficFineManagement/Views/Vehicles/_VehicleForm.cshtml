@@ -1,0 +1,28 @@
+@model Vehicle
+<form asp-action="@(Model.Id == 0 ? "Create" : "Edit")" method="post" class="card shadow-sm">
+    <div class="card-body">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="mb-3">
+            <label asp-for="Plate" class="form-label"></label>
+            <input asp-for="Plate" class="form-control text-uppercase" autocomplete="off" />
+            <span asp-validation-for="Plate" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="VehicleType" class="form-label"></label>
+            <select asp-for="VehicleType" class="form-select" asp-items="Html.GetEnumSelectList<VehicleType>()">
+                <option value="">Seçiniz</option>
+            </select>
+            <span asp-validation-for="VehicleType" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="BrandModel" class="form-label"></label>
+            <input asp-for="BrandModel" class="form-control" />
+            <span asp-validation-for="BrandModel" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="card-footer bg-white d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">İptal</a>
+    </div>
+</form>
