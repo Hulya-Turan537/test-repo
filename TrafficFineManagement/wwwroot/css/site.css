@@ -1,5 +1,15 @@
+:root {
+  --app-navy: #0f2744;
+  --app-navy-dark: #0a1b30;
+  --app-accent: #1d6ea8;
+  --app-bg: #f3f5f8;
+  --app-card: #ffffff;
+}
+
 html {
-  font-size: 14px;
+  font-size: 15px;
+  position: relative;
+  min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -8,17 +18,113 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  margin-bottom: 60px;
+  margin-bottom: 64px;
+  background: var(--app-bg);
+  color: #1c2834;
+}
+
+.app-navbar {
+  background: linear-gradient(90deg, var(--app-navy) 0%, #16385f 100%);
+}
+
+.app-navbar .navbar-brand {
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.app-navbar .nav-link {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.app-navbar .nav-link:hover,
+.app-navbar .nav-link.active {
+  color: #fff;
+}
+
+.app-navbar .form-label,
+.app-navbar .text-muted {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.app-main {
+  min-height: calc(100vh - 140px);
+}
+
+.app-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 56px;
+  line-height: 56px;
+  background: var(--app-navy-dark);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.page-header h1 {
+  color: var(--app-navy);
+}
+
+.stat-card,
+.status-tile,
+.card {
+  border: 1px solid #e4e9f0;
+  border-radius: 12px;
+  background: var(--app-card);
+}
+
+.stat-card {
+  padding: 1.15rem 1.25rem;
+  height: 100%;
+  box-shadow: 0 8px 24px rgba(15, 39, 68, 0.04);
+}
+
+.stat-label {
+  color: #6b7785;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--app-navy);
+  line-height: 1.2;
+}
+
+.status-tile {
+  display: block;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(15, 39, 68, 0.04);
+}
+
+.status-tile:hover {
+  border-color: var(--app-accent);
+}
+
+.table thead th {
+  color: #5b6773;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background-color: var(--app-accent);
+  border-color: var(--app-accent);
+}
+
+.btn-primary:hover {
+  background-color: #175c8d;
+  border-color: #175c8d;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem rgba(29, 110, 168, 0.35);
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
