@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TrafficFineManagement.Data;
 using TrafficFineManagement.Models;
+using TrafficFineManagement.Services;
 using TrafficFineManagement.Validators;
 using TrafficFineManagement.ViewModels;
 
@@ -13,11 +14,19 @@ public class TrafficFinesController : Controller
 {
     private readonly FineDbContext _db;
     private readonly IValidator<TrafficFine> _validator;
+    private readonly IApprovalWorkflowService _workflow;
+    private readonly ICurrentUserAccessor _currentUser;
 
-    public TrafficFinesController(FineDbContext db, IValidator<TrafficFine> validator)
+    public TrafficFinesController(
+        FineDbContext db,
+        IValidator<TrafficFine> validator,
+        IApprovalWorkflowService workflow,
+        ICurrentUserAccessor currentUser)
     {
         _db = db;
         _validator = validator;
+        _workflow = workflow;
+        _currentUser = currentUser;
     }
 
     public async Task<IActionResult> Index(string? plate, FineStatus? status)
@@ -62,6 +71,9 @@ public class TrafficFinesController : Controller
             return NotFound();
         }
 
+        var user = _currentUser.GetCurrentUser();
+        ViewBag.CanAct = _workflow.CanAct(fine.Status, user.Role);
+        ViewBag.CurrentUser = user;
         return View(fine);
     }
 
@@ -87,7 +99,7 @@ public class TrafficFinesController : Controller
 
         fine.History.Add(new ApprovalHistory
         {
-            PerformedBy = "Sistem",
+            PerformedBy = _currentUser.GetCurrentUser().DisplayName,
             PerformedAt = DateTime.Now,
             ActionType = ApprovalActionType.Created,
             Description = "Trafik cezası kaydı oluşturuldu.",
@@ -155,6 +167,40 @@ public class TrafficFinesController : Controller
         existing.Description = fine.Description;
         await _db.SaveChangesAsync();
         TempData["Success"] = "Trafik cezası güncellendi.";
+        return RedirectToAction(nameof(Details), new { id });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Approve(int id)
+    {
+        try
+        {
+            await _workflow.ApproveAsync(id);
+            TempData["Success"] = "Onay işlemi kaydedildi.";
+        }
+        catch (WorkflowException ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Details), new { id });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Reject(int id, string reason)
+    {
+        try
+        {
+            await _workflow.RejectAsync(id, reason);
+            TempData["Success"] = "Ceza reddedildi.";
+        }
+        catch (WorkflowException ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
+
         return RedirectToAction(nameof(Details), new { id });
     }
 

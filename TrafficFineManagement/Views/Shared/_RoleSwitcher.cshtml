@@ -1,0 +1,21 @@
+@inject ICurrentUserAccessor CurrentUserAccessor
+@{
+    var user = CurrentUserAccessor.GetCurrentUser();
+}
+<form asp-controller="Account" asp-action="SwitchRole" method="post" class="d-flex align-items-center gap-2 ms-auto">
+    <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+    <label class="form-label mb-0 small text-nowrap text-muted" for="role">Aktif rol</label>
+    <select id="role" name="role" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+        @foreach (UserRole role in Enum.GetValues<UserRole>())
+        {
+            if (role == user.Role)
+            {
+                <option value="@role" selected>@role.GetDisplayName()</option>
+            }
+            else
+            {
+                <option value="@role">@role.GetDisplayName()</option>
+            }
+        }
+    </select>
+</form>
