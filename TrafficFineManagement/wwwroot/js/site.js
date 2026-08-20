@@ -1,4 +1,35 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("rejectFineForm");
+    if (!form) {
+        return;
+    }
 
-// Write your JavaScript code.
+    const reason = form.querySelector("#rejectReason");
+    const error = form.querySelector("#rejectReasonError");
+    const modal = document.getElementById("rejectModal");
+
+    const clearError = () => {
+        error?.classList.add("d-none");
+        reason?.classList.remove("is-invalid");
+    };
+
+    form.addEventListener("submit", (event) => {
+        const value = (reason?.value || "").trim();
+        if (value.length < 3) {
+            event.preventDefault();
+            reason?.classList.add("is-invalid");
+            if (error) {
+                error.textContent = "Ret nedeni en az 3 karakter olmalıdır.";
+                error.classList.remove("d-none");
+                error.classList.add("d-block");
+            }
+        }
+    });
+
+    reason?.addEventListener("input", clearError);
+    modal?.addEventListener("hidden.bs.modal", () => {
+        form.reset();
+        clearError();
+        error?.classList.remove("d-block");
+    });
+});

@@ -34,9 +34,9 @@ public class ApprovalWorkflowService : IApprovalWorkflowService
     public async Task RejectAsync(int fineId, string reason, CancellationToken cancellationToken = default)
     {
         var trimmed = (reason ?? string.Empty).Trim();
-        if (string.IsNullOrWhiteSpace(trimmed))
+        if (string.IsNullOrWhiteSpace(trimmed) || trimmed.Length < 3)
         {
-            throw new WorkflowException("Ret nedeni zorunludur.");
+            throw new WorkflowException("Ret nedeni en az 3 karakter olmalıdır.");
         }
 
         var fine = await LoadAsync(fineId, cancellationToken);
